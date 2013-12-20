@@ -1,6 +1,7 @@
-app.controller('IndexCtrl',['$scope',function($scope){
-    $scope.text = 'hello';
-    $scope.map = {text:22}
+app.controller('IndexCtrl',['$scope','Rooms',function($scope, Rooms){
+    Rooms.getRooms().then(function(rooms){
+        $scope.rooms = rooms;
+    });
 }]);
 
 //app.controller('NotFoundCtrl',[]);

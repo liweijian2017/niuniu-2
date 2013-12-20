@@ -9,5 +9,9 @@ app.config(['$routeProvider', function($routeProvider){
         .when('/404',{
             templateUrl:'/partials/404.html'
         })
+        .when('/room/:id',{
+            controller:'RoomCtrl',
+            templateUrl:'/partials/room.html'
+        })
         .otherwise({redirectTo:'/'});
 }]);

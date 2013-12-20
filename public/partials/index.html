@@ -1,4 +1,13 @@
 <div ng-controller="IndexCtrl">
-    <h2 ng-bind="text"></h2>
-    <h3 ng-bind="map.text | number"></h3>
+    <label for="">房间号：</label>
+    <input type="text" name="roomId"/>
+    <br>
+    <label for="">昵称：</label>
+    <input type="text" name="nickname"/>
+    <br>
+    <button>进入</button>
+    <h3>房间列表</h3>
+    <ul>
+        <li ng-repeat="room in rooms">{{room}} <a href="#/room/{{room}}">进入</a></li>
+    </ul>
 </div>

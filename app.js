@@ -40,7 +40,7 @@ var io = require('socket.io').listen(server);
 server.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
-/* Rooms Êý¾Ý½á¹¹
+/* Rooms ï¿½ï¿½Ý½á¹¹
  * {
  *     0001[roomId]:{
  *         00001[clientId]:Clients[Object]
@@ -48,7 +48,7 @@ server.listen(app.get('port'), function () {
  * }
  * */
 var Rooms = {};
-/* client Êý¾Ý½á¹¹
+/* client ï¿½ï¿½Ý½á¹¹
  * {
  *     roomId:0001,
  *     clientId:00001,
@@ -60,7 +60,12 @@ var Clients = {};
 
 io.sockets.on('connection', function(socket){
     socket.emit('init', {hello:'world'});
+    socket.emit('getRooms', Rooms);
     var id = socket.id;
+
+    socket.on('getRooms', function(){
+        socket.emit('getRooms', {"001":"aa"});
+    });
 
     socket.on('userInfo', function(data){
         var roomId = data.roomId;
@@ -98,9 +103,9 @@ io.sockets.on('connection', function(socket){
 
     socket.on('disconnect', function () {
         //delete Clients[id];
-        delete Rooms[Clients[id].roomId][Clients[id].clientId];
+        /*delete Rooms[Clients[id].roomId][Clients[id].clientId];
         delete Clients[id];
-        console.log(Rooms);
+        console.log(Rooms);*/
     });
 });
 
