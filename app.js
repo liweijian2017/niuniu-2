@@ -56,6 +56,7 @@ var Rooms = {};
  * }
  * */
 var Clients = {};
+var RoomId = 1;
 
 
 io.sockets.on('connection', function(socket){
@@ -65,6 +66,16 @@ io.sockets.on('connection', function(socket){
 
     socket.on('getRooms', function(){
         socket.emit('getRooms', {"001":"aa"});
+    });
+    socket.on('createRoom', function(data){
+        var roomId = RoomId++;
+        var room = (Rooms[roomId] = Rooms[roomId] || {});
+        var client = (Clients[id] = Clients[id] || {});
+        client.roomId = roomId;
+        client.clientId = id;
+        room[id] = client;
+
+        socket.emit('createRoom', roomId);
     });
 
     socket.on('userInfo', function(data){

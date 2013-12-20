@@ -10,6 +10,14 @@ app.factory('Rooms',function($q){
                 def.resolve(data);
             });
             return def.promise;
+        },
+        createRoom:function(){
+            var def = $q.defer();
+            socket.on('createRoom', function (data) {
+                def.resolve(data);
+            });
+            socket.emit('createRoom');
+            return def.promise;
         }
     }
 

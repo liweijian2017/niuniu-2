@@ -6,6 +6,7 @@
     <input type="text" name="nickname"/>
     <br>
     <button>进入</button>
+    <button ng-click="createRoom()">创建房间</button>
     <h3>房间列表</h3>
     <ul>
         <li ng-repeat="room in rooms">{{room}} <a href="#/room/{{room}}">进入</a></li>
