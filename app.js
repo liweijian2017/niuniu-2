@@ -40,22 +40,44 @@ var io = require('socket.io').listen(server);
 server.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
+/* Rooms 数据结构
+ * {
+ *     0001[roomId]:{
+ *         00001[clientId]:Clients[Object]
+ *     }
+ * }
+ * */
+var Rooms = {};
+/* client 数据结构
+ * {
+ *     roomId:0001,
+ *     clientId:00001,
+ *     ready:true
+ * }
+ * */
+var Clients = {};
 
-var Data = {};
 
 io.sockets.on('connection', function(socket){
     socket.emit('init', {hello:'world'});
+    var id = socket.id;
 
     socket.on('userInfo', function(data){
-        var room = (Data[data.roomId] = Data[data.roomId] || {});
-        room[socket.id] = {};
+        var roomId = data.roomId;
+        var room = (Rooms[roomId] = Rooms[roomId] || {});
+        var client = (Clients[id] = Clients[id] || {});
+        client.roomId = roomId;
+        client.clientId = id;
+        room[id] = client;
+
         socket.emit('this', 'Welcome '+ data.clientId);
     });
 
     socket.on('ready', function(data){
-        var room = Data[data.roomId];
-        room[socket.id].ready = !room[socket.id].ready;
-        console.log(Data);
+        var room = Rooms[data.roomId];
+        var client = room[id];
+        client.ready = !client.ready;
+        console.log(Rooms);
         var allReady = true;
         var count = 0;
         for(var k in room){
@@ -66,7 +88,7 @@ io.sockets.on('connection', function(socket){
             }
             count++;
         }
-        if(count == 2 && allReady){
+        if(count >= 2 && allReady){
             socket.emit('this', 'start');
         }else{
             socket.emit('this', 'waiting');
@@ -75,9 +97,10 @@ io.sockets.on('connection', function(socket){
     });
 
     socket.on('disconnect', function () {
-        if(Data.room[socket.id]){
-            delete Data.room[socket.id];
-        }
+        //delete Clients[id];
+        delete Rooms[Clients[id].roomId][Clients[id].clientId];
+        delete Clients[id];
+        console.log(Rooms);
     });
 });
 
